@@ -1,9 +1,9 @@
 # Machine Learning Questions
 
 ## Levels
-- 🟢 [Easy](https://github.com/PhilZambri/DataLemur-Interview-Questions/new/main#-easy)
-- 🟠 [Medium](https://github.com/PhilZambri/DataLemur-Interview-Questions/new/main#-medium)
-- 🔴 [Hard](https://github.com/PhilZambri/DataLemur-Interview-Questions/new/main#-hard)
+- 🟢 [Easy](https://github.com/PhilZambri/DataLemur-Interview-Questions/blob/main/Machine%20Learning.md#-easy)
+- 🟠 [Medium](https://github.com/PhilZambri/DataLemur-Interview-Questions/blob/main/Machine%20Learning.md#-medium)
+- 🔴 [Hard](https://github.com/PhilZambri/DataLemur-Interview-Questions/blob/main/Machine%20Learning.md#-hard)
 
 ***
 
