@@ -58,6 +58,31 @@ ORDER BY candidate_id;
 
 ***
 
+### 📌 [Facebook | Easy | Page With No Likes](https://datalemur.com/questions/sql-page-with-no-likes)
+
+Assume you're given two tables containing data about Facebook Pages and their respective likes (as in "Like a Facebook Page").
+Write a query to return the IDs of the Facebook pages that have zero likes. The output should be sorted in ascending order based on the page IDs.
+
+My Solution:
+```sql
+SELECT page_id 
+FROM pages
+WHERE page_id NOT IN (SELECT DISTINCT(page_id) FROM page_likes)
+ORDER BY page_id;
+```
+Alternative Solution:
+```sql
+SELECT page_id
+FROM pages
+EXCEPT
+SELECT page_id
+FROM page_likes;
+```
+
+![image](https://github.com/user-attachments/assets/08ff8a7b-9459-428b-8231-51468b31e5d0)
+
+***
+
 ## 🟠 Medium
 
 
