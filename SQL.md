@@ -98,6 +98,40 @@ WHERE finish_date IS NULL;
 
 ***
 
+### 📌[NY Times | Easy | Laptop vs. Mobile Viewership](https://datalemur.com/questions/laptop-mobile-viewership)
+
+Write a query that calculates the total viewership for laptops and mobile devices where mobile is defined as the sum of tablet and phone viewership. Output the total viewership for laptops as laptop_reviews and the total viewership for mobile devices as mobile_views.
+
+My Solution:
+```sql
+WITH laptop(laptop_views) AS(
+  SELECT COUNT(*)
+  FROM viewership
+  WHERE device_type = 'laptop'
+),
+  mobile(mobile_views) AS (
+  SELECT COUNT(*)
+  FROM viewership
+  WHERE device_type IN ('tablet', 'phone')
+)
+
+SELECT laptop_views, mobile_views
+FROM laptop, mobile
+```
+
+Alternative Solution:
+```sql
+SELECT 
+  COUNT(*) FILTER (WHERE device_type = 'laptop') AS laptop_views,
+  COUNT(*) FILTER (WHERE device_type IN ('tablet', 'phone'))  AS mobile_views 
+FROM viewership;
+```
+
+![image](https://github.com/user-attachments/assets/e3f6fbda-e9c7-43a3-9e05-46fdeb4063b0)
+
+***
+
+### 📌
 
 ## 🟠 Medium
 
