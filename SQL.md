@@ -83,6 +83,22 @@ FROM page_likes;
 
 ***
 
+### 📌 [Tesla | Easy | Unfinished Parts](https://datalemur.com/questions/tesla-unfinished-parts)
+
+Tesla is investigating production bottlenecks and they need your help to extract the relevant data. 
+Write a query to determine which parts have begun the assembly process but are not yet finished.
+
+```sql
+SELECT part, assembly_step 
+FROM parts_assembly
+WHERE finish_date IS NULL;
+```
+
+![image](https://github.com/user-attachments/assets/cf130096-9961-4b77-84ee-3c9317145a0d)
+
+***
+
+
 ## 🟠 Medium
 
 
