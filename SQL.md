@@ -154,3 +154,27 @@ HAVING COUNT(*) >= 2;
 
 
 ## 🔴 Hard
+
+### 📌 [Amazon | Hard | Server Utilization Time](https://datalemur.com/questions/total-utilization-time)
+
+Amazon Web Services (AWS) is powered by fleets of servers. Senior management has requested data-driven solutions to optimize server usage.  
+Write a query that calculates the total time that the fleet of servers was running. The output should be in units of full days.
+
+```sql
+WITH time_diff AS(
+  SELECT server_id, status_time, session_status, 
+    status_time - LAG(status_time, 1)OVER(PARTITION BY server_id ORDER BY status_time) AS prev_time
+  FROM server_utilization
+  ORDER BY server_id, status_time
+)
+
+SELECT FLOOR(EXTRACT(epoch FROM SUM(prev_time))/86400) AS total_uptime_days
+FROM time_diff
+WHERE session_status = 'stop';
+```
+
+![image](https://github.com/user-attachments/assets/b67fb09c-385a-42a0-9163-d081c50165b3)
+
+***
+
+### 📌
