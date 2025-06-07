@@ -155,11 +155,49 @@ HAVING COUNT(*) >= 2;
 
 ## 🔴 Hard
 
+### 📌 [Stripe | Hard | Repeated Payments](https://datalemur.com/questions/repeated-payments)
+
+Sometimes, payment transactions are repeated by accident; it could be due to user error, API failure or a retry error that causes a credit card to be charged twice.  
+Using the transactions table, identify any payments made at the same merchant with the same credit card for the same amount within 10 minutes of each other. Count such repeated payments.
+
+My Solution:
+```sql
+WITH time_diff AS (
+  SELECT transaction_id, merchant_id, credit_card_id, transaction_timestamp, amount,
+    transaction_timestamp -
+    LAG(transaction_timestamp)OVER(PARTITION BY merchant_id, credit_card_id, amount ORDER BY transaction_timestamp) AS prev_time_diff
+  FROM transactions
+)
+
+SELECT COUNT(prev_time_diff) AS payment_count
+FROM time_diff
+WHERE prev_time_diff NOTNULL 
+      AND EXTRACT(epoch FROM prev_time_diff)/60 <= 10;
+```
+
+Alternative Solution:
+```sql
+SELECT 
+  COUNT(*) AS payment_count
+FROM transactions AS t1
+JOIN transactions AS t2
+ON t1.merchant_id = t1.merchant_id
+  AND t1.credit_card_id = t2.credit_card_id
+  AND t1.amount = t2.amount
+  AND t1.transaction_timestamp < t2.transaction_timestamp
+  AND t2.transaction_timestamp - t1.transaction_timestamp <= INTERVAL '10 MINUTES';
+```
+
+![image](https://github.com/user-attachments/assets/cb414818-4188-4302-9e0b-0a045dff29b5)
+
+***
+
 ### 📌 [Amazon | Hard | Server Utilization Time](https://datalemur.com/questions/total-utilization-time)
 
 Amazon Web Services (AWS) is powered by fleets of servers. Senior management has requested data-driven solutions to optimize server usage.  
 Write a query that calculates the total time that the fleet of servers was running. The output should be in units of full days.
 
+My Solution:
 ```sql
 WITH time_diff AS(
   SELECT server_id, status_time, session_status, 
@@ -169,6 +207,20 @@ WITH time_diff AS(
 )
 
 SELECT FLOOR(EXTRACT(epoch FROM SUM(prev_time))/86400) AS total_uptime_days
+FROM time_diff
+WHERE session_status = 'stop';
+```
+
+Alternative Solution:
+```sql
+WITH time_diff AS(
+  SELECT server_id, status_time, session_status, 
+    status_time - LAG(status_time, 1)OVER(PARTITION BY server_id ORDER BY status_time) AS prev_time
+  FROM server_utilization
+  ORDER BY server_id, status_time
+)
+
+SELECT EXTRACT(DAY FROM JUSTIFY_HOURS(SUM(prev_time))) AS total_uptime_days
 FROM time_diff
 WHERE session_status = 'stop';
 ```
