@@ -155,6 +155,23 @@ HAVING COUNT(*) >= 2;
 
 ## 🔴 Hard
 
+### 📌 [McKinsey | Hard | 3-Topping-Pizzas](https://datalemur.com/questions/pizzas-topping-cost)
+
+Given a list of pizza toppings, consider all the possible 3-topping pizzas, and print out the total cost of those 3 toppings. Sort the results with the highest total cost on the top followed by pizza toppings in ascending order.  
+Break ties by listing the ingredients in alphabetical order, starting from the first ingredient, followed by the second and third.
+
+My Solution:
+```sql
+SELECT CONCAT_WS(',', p1.topping_name, p2.topping_name, p3.topping_name) AS pizza,
+      p1.ingredient_cost + p2.ingredient_cost + p3.ingredient_cost AS total_cost
+FROM pizza_toppings p1 CROSS JOIN pizza_toppings p2 CROSS JOIN pizza_toppings p3
+WHERE p1.topping_name < p2.topping_name 
+      AND p2.topping_name < p3.topping_name
+ORDER BY total_cost DESC, pizza;
+```
+
+***
+
 ### 📌 [FAANG | Hard | Department vs Company Salary](https://datalemur.com/questions/sql-department-company-salary-comparison)
 
 Write a query to compare the average salary of employees in each department to the company's average salary for March 2024. Return the comparison result as 'higher', 'lower', or 'same' for each department. Display the department ID, payment month (in MM-YYYY format), and the comparison result.
