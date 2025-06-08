@@ -155,6 +155,48 @@ HAVING COUNT(*) >= 2;
 
 ## 🔴 Hard
 
+### 📌 [FAANG | Hard | Department vs Company Salary](https://datalemur.com/questions/sql-department-company-salary-comparison)
+
+Write a query to compare the average salary of employees in each department to the company's average salary for March 2024. Return the comparison result as 'higher', 'lower', or 'same' for each department. Display the department ID, payment month (in MM-YYYY format), and the comparison result.
+
+My Solution:
+```sql
+WITH employee_avg_salary AS(
+  SELECT e.employee_id, name, salary, department_id, payment_date,
+    avg(salary)OVER() AS overall_avg_salary,
+    avg(salary)OVER(PARTITION BY department_id) AS dept_avg_salary
+  FROM employee AS e JOIN salary AS s on e.employee_id = s.employee_id
+  WHERE EXTRACT(MONTH FROM payment_date) = 3
+)
+
+SELECT DISTINCT department_id, TO_CHAR(payment_date, 'MM-YYYY') AS payment_date, 
+  CASE
+    WHEN dept_avg_salary < overall_avg_salary THEN 'lower'
+    WHEN dept_avg_salary > overall_avg_salary THEN 'higher'
+    ELSE 'same'
+  END AS comparison
+FROM employee_avg_salary;
+```
+
+Alternate Solution:
+```sql
+SELECT DISTINCT department_id,
+       TO_CHAR(payment_date,'MM-YYYY'),
+       CASE
+            WHEN AVG(amount) OVER (PARTITION BY department_id) < AVG(amount) OVER () THEN 'lower'
+            WHEN AVG(amount) OVER (PARTITION BY department_id) = AVG(amount) OVER () THEN 'same'
+            WHEN AVG(amount) OVER (PARTITION BY department_id) > AVG(amount) OVER () THEN 'higher'
+       END
+FROM employee AS emp INNER JOIN salary AS s
+ON emp.employee_id = s.employee_id
+WHERE EXTRACT(MONTH FROM payment_date) = 3
+      AND EXTRACT(YEAR FROM payment_date) = 2024;
+```
+
+![image](https://github.com/user-attachments/assets/76ee2acb-1b4d-4d86-90d8-acf4a498d81f)
+
+***
+
 ### 📌 [Stripe | Hard | Repeated Payments](https://datalemur.com/questions/repeated-payments)
 
 Sometimes, payment transactions are repeated by accident; it could be due to user error, API failure or a retry error that causes a credit card to be charged twice.  
