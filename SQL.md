@@ -155,6 +155,31 @@ HAVING COUNT(*) >= 2;
 
 ## 🔴 Hard
 
+### 📌 [Facebook | Hard | Advertiser Status](https://datalemur.com/questions/updated-status)
+
+You're provided with two tables: the advertiser table contains information about advertisers and their respective payment status, and the daily_pay table contains the current payment information for advertisers, and it only includes advertisers who have made payments.
+
+Write a query to update the payment status of Facebook advertisers based on the information in the daily_pay table. The output should include the user ID and their current payment status, sorted by the user id.
+
+My Solution:
+```sql
+SELECT user_id,
+  CASE
+    WHEN paid ISNULL THEN 'CHURN'
+    WHEN paid NOTNULL AND status = 'NEW' THEN 'EXISTING'
+    WHEN paid NOTNULL AND status = 'EXISTING' THEN 'EXISTING'
+    WHEN paid NOTNULL AND status = 'CHURN' THEN 'RESURRECT'
+    WHEN paid NOTNULL AND status = 'RESURRECT' THEN 'EXISTING'
+    ELSE 'NEW'
+  END AS new_status
+FROM advertiser a FULL JOIN daily_pay dp USING(user_id)
+ORDER BY user_id;
+```
+
+![image](https://github.com/user-attachments/assets/2a59fc93-08ae-453e-84ee-de3dfb955291)
+
+***
+
 ### 📌 [McKinsey | Hard | 3-Topping-Pizzas](https://datalemur.com/questions/pizzas-topping-cost)
 
 Given a list of pizza toppings, consider all the possible 3-topping pizzas, and print out the total cost of those 3 toppings. Sort the results with the highest total cost on the top followed by pizza toppings in ascending order.  
@@ -169,6 +194,8 @@ WHERE p1.topping_name < p2.topping_name
       AND p2.topping_name < p3.topping_name
 ORDER BY total_cost DESC, pizza;
 ```
+
+![image](https://github.com/user-attachments/assets/0cec6fe0-dba1-43fe-9eb4-a0c57491b074)
 
 ***
 
