@@ -155,6 +155,45 @@ HAVING COUNT(*) >= 2;
 
 ## 🔴 Hard
 
+### 📌 [Amazon | Hard | Maximize Prime Item Inventory](https://datalemur.com/questions/prime-warehouse-storage)
+
+Write a query to find the maximum number of prime and non-prime batches that can be stored in the 500,000 square feet warehouse based on the following criteria:
+- Prioritize stocking prime batches
+- After accommodating prime items, allocate any remaining space to non-prime batches
+
+My Solution:
+```sql
+WITH summary AS (
+  SELECT 
+    SUM(square_footage) FILTER (WHERE item_type = 'prime_eligible') AS prime_sq_ft,
+    COUNT(item_id) FILTER (WHERE item_type = 'prime_eligible') AS prime_item_count,
+    SUM(square_footage) FILTER (WHERE item_type = 'not_prime') AS not_prime_sq_ft,
+    COUNT(item_id) FILTER (WHERE item_type = 'not_prime') AS not_prime_item_count
+  FROM inventory
+),
+prime_occupied_area AS (
+  SELECT FLOOR((500000 - not_prime_sq_ft)/prime_sq_ft)*prime_sq_ft AS max_prime_area
+  FROM summary
+)
+
+SELECT 
+  'prime_eligible' AS item_type,
+  FLOOR((500000 - not_prime_sq_ft)/prime_sq_ft)*prime_item_count AS item_count
+FROM summary
+
+UNION ALL
+
+SELECT 
+  'not_prime' AS item_type,
+  FLOOR((500000-(SELECT max_prime_area FROM prime_occupied_area)) 
+    / not_prime_sq_ft) * not_prime_item_count AS item_count
+FROM summary;
+```
+
+![image](https://github.com/user-attachments/assets/bee720b1-f2a5-4fc6-9eac-63a86c5bb5f7)
+
+***
+
 ### 📌 [Facebook | Hard | Advertiser Status](https://datalemur.com/questions/updated-status)
 
 You're provided with two tables: the advertiser table contains information about advertisers and their respective payment status, and the daily_pay table contains the current payment information for advertisers, and it only includes advertisers who have made payments.
