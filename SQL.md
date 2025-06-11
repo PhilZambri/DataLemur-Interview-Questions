@@ -155,6 +155,49 @@ HAVING COUNT(*) >= 2;
 
 ## 🔴 Hard
 
+### 📌 [Facebook | Hard | Active User Retention](https://datalemur.com/questions/user-retention)
+
+Assume you're given a table containing information on Facebook user actions. Write a query to obtain number of monthly active users (MAUs) in July 2022, including the month in numerical format "1, 2, 3".
+
+My Solution:
+```sql
+WITH n AS (
+  SELECT DISTINCT user_id, EXTRACT(MONTH FROM event_date) AS month
+  FROM user_actions
+  WHERE EXTRACT(MONTH FROM event_date) IN (6, 7)
+), 
+  x AS (
+  SELECT user_id
+  FROM n
+  GROUP BY user_id
+  HAVING COUNT(user_id) = 2
+)
+
+SELECT 7 AS month, COUNT(*) AS monthly_active_users
+FROM x;
+```
+
+Alternate Solution:
+```sql
+with cte as (
+    SELECT user_id
+    from user_actions
+    WHERE EXTRACT(Year from event_date) = 2022 AND EXTRACT(Month from event_date) = 6
+    
+    INTERSECT 
+    
+    SELECT user_id
+    from user_actions
+    WHERE EXTRACT(Year from event_date) = 2022 AND EXTRACT(Month from event_date) = 7 )
+    
+SELECT 7 as month, count(*) as active_users
+from cte
+```
+
+![image](https://github.com/user-attachments/assets/b7dddc9e-322b-4299-acb6-87df045e7cc1)
+
+***
+
 ### 📌 [Wayfair | Hard | Y-on-Y Growth Rate](https://datalemur.com/questions/yoy-growth-rate)
 
 Assume you're given a table containing information about Wayfair user transactions for different products. Write a query to calculate the year-on-year growth rate for the total spend of each product, grouping the results by product ID.
