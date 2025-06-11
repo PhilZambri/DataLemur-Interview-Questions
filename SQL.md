@@ -155,6 +155,30 @@ HAVING COUNT(*) >= 2;
 
 ## 🔴 Hard
 
+### 📌 [Wayfair | Hard | Y-on-Y Growth Rate](https://datalemur.com/questions/yoy-growth-rate)
+
+Assume you're given a table containing information about Wayfair user transactions for different products. Write a query to calculate the year-on-year growth rate for the total spend of each product, grouping the results by product ID.
+
+My Solution:
+```sql
+WITH curr_prev_spend AS(
+  SELECT 
+    EXTRACT(YEAR FROM transaction_date) AS year,
+    product_id,
+    spend AS current_year_spend,
+    LAG(spend, 1) OVER(PARTITION BY product_id ORDER BY transaction_date) AS prev_year_spend
+  FROM user_transactions
+)
+
+SELECT *,
+  ROUND(((current_year_spend - prev_year_spend) / prev_year_spend) * 100, 2) AS yoy_rate
+FROM curr_prev_spend;
+```
+
+![image](https://github.com/user-attachments/assets/763c37b8-b99f-45ff-b6fc-acd1874c756d)
+
+***
+
 ### 📌 [Amazon | Hard | Maximize Prime Item Inventory](https://datalemur.com/questions/prime-warehouse-storage)
 
 Write a query to find the maximum number of prime and non-prime batches that can be stored in the 500,000 square feet warehouse based on the following criteria:
