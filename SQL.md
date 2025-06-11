@@ -152,6 +152,31 @@ HAVING COUNT(*) >= 2;
 
 ## 🟠 Medium
 
+### 📌 [Verizon | Medium | International Call Percentage](https://datalemur.com/questions/international-call-percentage)
+
+A phone call is considered an international call when the person calling is in a different country than the person receiving the call.  
+What percentage of phone calls are international? Round the result to 1 decimal.
+
+My Solution:
+```sql
+WITH call_rec_country AS(
+  SELECT 
+    p1.caller_id, 
+    p1.receiver_id, 
+    p2.country_id AS caller_country, 
+    p3.country_id AS receiver_country 
+  FROM phone_calls p1 
+  JOIN phone_info p2 USING(caller_id) 
+  JOIN phone_info p3 ON p1.receiver_id=p3.caller_id
+)
+
+SELECT ROUND((COUNT(*) FILTER(WHERE caller_country <> receiver_country)*1.0 / COUNT(*)) * 100, 1) AS international_calls_pct
+FROM call_rec_country
+```
+
+![image](https://github.com/user-attachments/assets/2c331aff-8ac2-4e78-aaf9-51fde27aa0a0)
+
+***
 
 ## 🔴 Hard
 
