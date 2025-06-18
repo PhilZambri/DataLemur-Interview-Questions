@@ -152,6 +152,23 @@ HAVING COUNT(*) >= 2;
 
 ## 🟠 Medium
 
+### 📌 [JPMorgan Chase | Medium | Card Launch Success](https://datalemur.com/questions/card-launch-success)
+
+Write a query that outputs the name of the credit card, and how many cards were issued in its launch month. The launch month is the earliest record in the monthly_cards_issued table for a given card. Order the results starting from the biggest issued amount.
+
+My Solution:
+```sql
+SELECT DISTINCT
+  card_name,
+  FIRST_VALUE(issued_amount) OVER(PARTITION BY card_name ORDER BY issue_year, issue_month) AS issued_amount
+FROM monthly_cards_issued
+ORDER BY issued_amount DESC; 
+```
+
+![image](https://github.com/user-attachments/assets/0bd65e30-6efa-42cf-b9c1-9caad2b5fbfe)
+
+***
+
 ### 📌 [Verizon | Medium | International Call Percentage](https://datalemur.com/questions/international-call-percentage)
 
 A phone call is considered an international call when the person calling is in a different country than the person receiving the call.  
